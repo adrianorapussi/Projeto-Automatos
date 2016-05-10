@@ -45,14 +45,26 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    T_NEWLINE = 258,
-    T_QUIT = 259,
-    T_NUMF = 260,
-    T_NUM = 261,
-    T_SOMA = 262,
-    T_SUB = 263,
-    T_MULT = 264,
-    T_DIV = 265
+    T_PS = 258,
+    T_INVALIDO = 259,
+    T_KILL = 260,
+    T_LS = 261,
+    T_MKDIR = 262,
+    T_RMDIR = 263,
+    T_NEWLINE = 264,
+    T_QUIT = 265,
+    T_CD = 266,
+    T_TOUCH = 267,
+    T_IFCONFIG = 268,
+    T_START = 269,
+    T_ARG = 270,
+    T_FOLDERARG = 271,
+    T_NUMF = 272,
+    T_NUM = 273,
+    T_SOMA = 274,
+    T_SUB = 275,
+    T_MULT = 276,
+    T_DIV = 277
   };
 #endif
 
@@ -66,9 +78,9 @@ union YYSTYPE
     int integer;
     float floatPonto;
     char string;
-    char * stringp;
+    char * pontString;
 
-#line 72 "rapussiBison.tab.h" /* yacc.c:1909  */
+#line 84 "rapussiBison.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

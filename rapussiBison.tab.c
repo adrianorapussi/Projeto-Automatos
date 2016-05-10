@@ -78,11 +78,11 @@ void yyerror(const char* s);
 
 /* Método de impressõa em console */
 void imprime(){
-    char completo[4096] = "adrianoRapussi@Shell:";
+    char completo[4096] = "adrianoRapussiShell:";
     char path[2048];
     getcwd(path, sizeof(path));
     strcat(completo,path);
-    strcat(completo,">> ");
+    strcat(completo,"---->");
     printf("%s",completo); 
 }
 
@@ -122,14 +122,26 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    T_NEWLINE = 258,
-    T_QUIT = 259,
-    T_NUMF = 260,
-    T_NUM = 261,
-    T_SOMA = 262,
-    T_SUB = 263,
-    T_MULT = 264,
-    T_DIV = 265
+    T_PS = 258,
+    T_INVALIDO = 259,
+    T_KILL = 260,
+    T_LS = 261,
+    T_MKDIR = 262,
+    T_RMDIR = 263,
+    T_NEWLINE = 264,
+    T_QUIT = 265,
+    T_CD = 266,
+    T_TOUCH = 267,
+    T_IFCONFIG = 268,
+    T_START = 269,
+    T_ARG = 270,
+    T_FOLDERARG = 271,
+    T_NUMF = 272,
+    T_NUM = 273,
+    T_SOMA = 274,
+    T_SUB = 275,
+    T_MULT = 276,
+    T_DIV = 277
   };
 #endif
 
@@ -143,9 +155,9 @@ union YYSTYPE
     int integer;
     float floatPonto;
     char string;
-    char * stringp;
+    char * pontString;
 
-#line 149 "rapussiBison.tab.c" /* yacc.c:355  */
+#line 161 "rapussiBison.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -162,7 +174,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 166 "rapussiBison.tab.c" /* yacc.c:358  */
+#line 178 "rapussiBison.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -404,21 +416,21 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   40
+#define YYLAST   55
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  11
+#define YYNTOKENS  23
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  5
+#define YYNNTS  6
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  25
+#define YYNRULES  38
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  37
+#define YYNSTATES  57
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
 #define YYUNDEFTOK  2
-#define YYMAXUTOK   265
+#define YYMAXUTOK   277
 
 #define YYTRANSLATE(YYX)                                                \
   ((unsigned int) (YYX) <= YYMAXUTOK ? yytranslate[YYX] : YYUNDEFTOK)
@@ -453,16 +465,18 @@ static const yytype_uint8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16,    17,    18,    19,    20,    21,    22
 };
 
 #if YYDEBUG
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    45,    45,    46,    51,    52,    55,    58,    65,    66,
-      67,    68,    71,    72,    73,    74,    75,    76,    77,    78,
-      79,    80,    81,    82,    83,    84
+       0,    48,    48,    49,    54,    55,    56,    59,    62,    65,
+      71,    83,    86,    89,    92,   111,   116,   122,   127,   133,
+     136,   142,   143,   144,   145,   148,   149,   150,   151,   152,
+     153,   154,   155,   156,   157,   158,   159,   160,   161
 };
 #endif
 
@@ -471,9 +485,11 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "T_NEWLINE", "T_QUIT", "T_NUMF", "T_NUM",
+  "$end", "error", "$undefined", "T_PS", "T_INVALIDO", "T_KILL", "T_LS",
+  "T_MKDIR", "T_RMDIR", "T_NEWLINE", "T_QUIT", "T_CD", "T_TOUCH",
+  "T_IFCONFIG", "T_START", "T_ARG", "T_FOLDERARG", "T_NUMF", "T_NUM",
   "T_SOMA", "T_SUB", "T_MULT", "T_DIV", "$accept", "start", "line",
-  "intCalculo", "floatCalculo", YY_NULLPTR
+  "action", "intCalculo", "floatCalculo", YY_NULLPTR
 };
 #endif
 
@@ -483,14 +499,15 @@ static const char *const yytname[] =
 static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
-     265
+     265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
+     275,   276,   277
 };
 # endif
 
-#define YYPACT_NINF -13
+#define YYPACT_NINF -15
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-13)))
+  (!!((Yystate) == (-15)))
 
 #define YYTABLE_NINF -1
 
@@ -501,10 +518,12 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-     -13,    34,   -13,   -13,     1,   -13,   -13,   -13,    15,    23,
-     -13,   -13,    14,    14,    14,    14,   -13,    14,    14,    14,
-      14,   -13,   -13,   -13,   -13,   -13,   -13,   -13,   -13,   -13,
-     -13,   -13,   -13,   -13,   -13,   -13,   -13
+     -15,     0,   -15,   -15,     4,   -15,   -11,     9,   -15,    16,
+     -14,    11,   -15,    12,   -15,   -15,   -15,   -15,   -15,    19,
+      10,    14,   -15,   -15,   -15,   -15,   -15,   -15,   -15,   -15,
+     -15,   -15,     3,     3,     3,     3,   -15,     3,     3,     3,
+       3,   -15,   -15,   -15,   -15,   -15,   -15,   -15,   -15,   -15,
+     -15,   -15,   -15,   -15,   -15,   -15,   -15
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -512,22 +531,24 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       2,     0,     1,     4,     0,    12,     8,     3,     0,     0,
-       7,     5,     0,     0,     0,     0,     6,     0,     0,     0,
-       0,     9,    17,    10,    18,    11,    19,    25,    20,    21,
-      13,    22,    14,    23,    15,    24,    16
+       2,     0,     1,    12,     0,    11,     0,     0,     4,     0,
+       0,     0,    13,     0,    19,    20,    25,    21,     3,     0,
+       0,     0,    14,    15,    16,     8,    10,     9,    17,    18,
+       5,     6,     0,     0,     0,     0,     7,     0,     0,     0,
+       0,    22,    30,    23,    31,    24,    32,    38,    33,    34,
+      26,    35,    27,    36,    28,    37,    29
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -13,   -13,   -13,   -12,    -3
+     -15,   -15,   -15,   -15,     5,    15
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     1,     7,     8,     9
+      -1,     1,    18,    19,    20,    21
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -535,46 +556,52 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-      21,    23,    25,    27,    10,    29,    31,    33,    35,    22,
-      24,    26,    28,     0,    30,    32,    34,    36,    11,     5,
-       6,     0,    12,    13,    14,    15,    16,     0,     0,     0,
-      17,    18,    19,    20,     2,     0,     0,     3,     4,     5,
-       6
+       2,    26,    27,     3,    23,     4,     5,     6,     7,     8,
+       9,    10,    11,    12,    13,    14,    15,    16,    17,    31,
+      16,    17,    22,    36,    24,    25,    28,    29,    30,    32,
+      33,    34,    35,    37,    38,    39,    40,    41,    43,    45,
+      47,     0,    49,    51,    53,    55,     0,    42,    44,    46,
+      48,     0,    50,    52,    54,    56
 };
 
 static const yytype_int8 yycheck[] =
 {
-      12,    13,    14,    15,     3,    17,    18,    19,    20,    12,
-      13,    14,    15,    -1,    17,    18,    19,    20,     3,     5,
-       6,    -1,     7,     8,     9,    10,     3,    -1,    -1,    -1,
-       7,     8,     9,    10,     0,    -1,    -1,     3,     4,     5,
-       6
+       0,    15,    16,     3,    15,     5,     6,     7,     8,     9,
+      10,    11,    12,    13,    14,    15,    16,    17,    18,     9,
+      17,    18,    18,     9,    15,     9,    15,    15,     9,    19,
+      20,    21,    22,    19,    20,    21,    22,    32,    33,    34,
+      35,    -1,    37,    38,    39,    40,    -1,    32,    33,    34,
+      35,    -1,    37,    38,    39,    40
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
      symbol of state STATE-NUM.  */
 static const yytype_uint8 yystos[] =
 {
-       0,    12,     0,     3,     4,     5,     6,    13,    14,    15,
-       3,     3,     7,     8,     9,    10,     3,     7,     8,     9,
-      10,    14,    15,    14,    15,    14,    15,    14,    15,    14,
-      15,    14,    15,    14,    15,    14,    15
+       0,    24,     0,     3,     5,     6,     7,     8,     9,    10,
+      11,    12,    13,    14,    15,    16,    17,    18,    25,    26,
+      27,    28,    18,    15,    15,     9,    15,    16,    15,    15,
+       9,     9,    19,    20,    21,    22,     9,    19,    20,    21,
+      22,    27,    28,    27,    28,    27,    28,    27,    28,    27,
+      28,    27,    28,    27,    28,    27,    28
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
 static const yytype_uint8 yyr1[] =
 {
-       0,    11,    12,    12,    13,    13,    13,    13,    14,    14,
-      14,    14,    15,    15,    15,    15,    15,    15,    15,    15,
-      15,    15,    15,    15,    15,    15
+       0,    23,    24,    24,    25,    25,    25,    25,    25,    26,
+      26,    26,    26,    26,    26,    26,    26,    26,    26,    26,
+      26,    27,    27,    27,    27,    28,    28,    28,    28,    28,
+      28,    28,    28,    28,    28,    28,    28,    28,    28
 };
 
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     0,     2,     1,     2,     2,     2,     1,     3,
-       3,     3,     1,     3,     3,     3,     3,     3,     3,     3,
-       3,     3,     3,     3,     3,     3
+       0,     2,     0,     2,     1,     2,     2,     2,     2,     2,
+       2,     1,     1,     1,     2,     2,     2,     2,     2,     1,
+       1,     1,     3,     3,     3,     1,     3,     3,     3,     3,
+       3,     3,     3,     3,     3,     3,     3,     3,     3
 };
 
 
@@ -1251,154 +1278,284 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 45 "rapussiBison.y" /* yacc.c:1646  */
+#line 48 "rapussiBison.y" /* yacc.c:1646  */
     { imprime(); }
-#line 1257 "rapussiBison.tab.c" /* yacc.c:1646  */
+#line 1284 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 46 "rapussiBison.y" /* yacc.c:1646  */
+#line 49 "rapussiBison.y" /* yacc.c:1646  */
     {
                        imprime();
                      }
-#line 1265 "rapussiBison.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 5:
-#line 52 "rapussiBison.y" /* yacc.c:1646  */
-    {
-                            printf("Resultado: %i\n", (yyvsp[-1].integer));
-                           }
-#line 1273 "rapussiBison.tab.c" /* yacc.c:1646  */
+#line 1292 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 55 "rapussiBison.y" /* yacc.c:1646  */
-    {
-                                printf("Resultado: %f\n", (yyvsp[-1].floatPonto));
-                             }
-#line 1281 "rapussiBison.tab.c" /* yacc.c:1646  */
+#line 56 "rapussiBison.y" /* yacc.c:1646  */
+    {   
+                            printf("Saída = %i\n", (yyvsp[-1].integer));
+                        }
+#line 1300 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 58 "rapussiBison.y" /* yacc.c:1646  */
+#line 59 "rapussiBison.y" /* yacc.c:1646  */
     { 
-                        printf("Fim da execução \n"); 
-                        exit(0);
-                        }
-#line 1290 "rapussiBison.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 8:
-#line 65 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.integer) = (yyvsp[0].integer); }
-#line 1296 "rapussiBison.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 9:
-#line 66 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.integer) = (yyvsp[-2].integer) + (yyvsp[0].integer); }
-#line 1302 "rapussiBison.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 10:
-#line 67 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.integer) = (yyvsp[-2].integer) - (yyvsp[0].integer); }
+                            printf("Saída = %f\n", (yyvsp[-1].floatPonto));
+                          }
 #line 1308 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
-  case 11:
-#line 68 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.integer) = (yyvsp[-2].integer) * (yyvsp[0].integer); }
+  case 8:
+#line 62 "rapussiBison.y" /* yacc.c:1646  */
+    { printf("Fim da execução \n"); exit(0); }
 #line 1314 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
-  case 12:
+  case 9:
+#line 65 "rapussiBison.y" /* yacc.c:1646  */
+    {
+                            int representative = chdir((yyvsp[0].pontString));
+                            if(representative != 0){
+                                printf("Erro, Pasta não encontrada \n");
+                            }
+                          }
+#line 1325 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 10:
 #line 71 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[0].floatPonto); }
-#line 1320 "rapussiBison.tab.c" /* yacc.c:1646  */
+    {
+                        int representative;
+                        char path[2048];
+                        getcwd(path, sizeof(path));
+                        strcat(path, "/");
+                        strcat(path, (yyvsp[0].pontString));
+                        printf("cd com entrada");
+                        representative = chdir(path);
+                        if(representative != 0){
+                            printf("Erro, Pasta não encontrada \n");
+                        }
+                    }
+#line 1342 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
-  case 13:
-#line 72 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) + (yyvsp[0].floatPonto); }
-#line 1326 "rapussiBison.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 14:
-#line 73 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) - (yyvsp[0].floatPonto); }
-#line 1332 "rapussiBison.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 15:
-#line 74 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) * (yyvsp[0].floatPonto); }
-#line 1338 "rapussiBison.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 16:
-#line 75 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) / (yyvsp[0].floatPonto); }
-#line 1344 "rapussiBison.tab.c" /* yacc.c:1646  */
-    break;
-
-  case 17:
-#line 76 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[-2].integer) + (yyvsp[0].floatPonto); }
+  case 11:
+#line 83 "rapussiBison.y" /* yacc.c:1646  */
+    { 
+                    system("/bin/ls");
+                 }
 #line 1350 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
+  case 12:
+#line 86 "rapussiBison.y" /* yacc.c:1646  */
+    {
+                    system("/bin/ps");
+                 }
+#line 1358 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 13:
+#line 89 "rapussiBison.y" /* yacc.c:1646  */
+    { 
+                        system("ifconfig");
+                     }
+#line 1366 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 14:
+#line 92 "rapussiBison.y" /* yacc.c:1646  */
+    {  
+                         char string[100], lastString[1000] = "/bin/kill ";
+                         int i, rem, len = 0, n;
+                         n = (yyvsp[0].integer);
+                         while (n != 0)
+                         {
+                             len++;
+                             n /= 10;
+                         }
+                         for (i = 0; i < len; i++)
+                         {
+                             rem = (yyvsp[0].integer) % 10;
+                             (yyvsp[0].integer) = (yyvsp[0].integer) / 10;
+                             string[len - (i + 1)] = rem + '0';
+                         }
+                         string[len] = '\0';
+                         strcat(lastString, string);
+                         system(lastString); 
+                     }
+#line 1390 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 15:
+#line 111 "rapussiBison.y" /* yacc.c:1646  */
+    {
+                         char lastString[1000] = "/bin/mkdir ";
+                         strcat(lastString, (yyvsp[0].pontString));
+                         system(lastString);
+                       }
+#line 1400 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 16:
+#line 116 "rapussiBison.y" /* yacc.c:1646  */
+    {
+                         char lastString[1000] = "/bin/rmdir ";
+                         strcat(lastString, (yyvsp[0].pontString));
+                         system(lastString);
+                       }
+#line 1410 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 17:
+#line 122 "rapussiBison.y" /* yacc.c:1646  */
+    {
+                          char lastString[1000] = "/bin/touch ";
+                          strcat(lastString, (yyvsp[0].pontString));
+                          system(lastString);
+                        }
+#line 1420 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
   case 18:
-#line 77 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[-2].integer) - (yyvsp[0].floatPonto); }
-#line 1356 "rapussiBison.tab.c" /* yacc.c:1646  */
+#line 127 "rapussiBison.y" /* yacc.c:1646  */
+    { 
+                            if(fork() == 0){
+                                system((yyvsp[0].pontString));
+                                exit(0);
+                            } 
+                        }
+#line 1431 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 78 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[-2].integer) * (yyvsp[0].floatPonto); }
-#line 1362 "rapussiBison.tab.c" /* yacc.c:1646  */
+#line 133 "rapussiBison.y" /* yacc.c:1646  */
+    { 
+                    yyerror("Entrada inválida");
+                 }
+#line 1439 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 79 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[-2].integer) / (yyvsp[0].floatPonto); }
-#line 1368 "rapussiBison.tab.c" /* yacc.c:1646  */
+#line 136 "rapussiBison.y" /* yacc.c:1646  */
+    {
+                         yyerror("Entrada inválida");
+                     }
+#line 1447 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 80 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) + (yyvsp[0].integer); }
-#line 1374 "rapussiBison.tab.c" /* yacc.c:1646  */
+#line 142 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.integer) = (yyvsp[0].integer); }
+#line 1453 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 81 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) - (yyvsp[0].integer); }
-#line 1380 "rapussiBison.tab.c" /* yacc.c:1646  */
+#line 143 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.integer) = (yyvsp[-2].integer) + (yyvsp[0].integer); }
+#line 1459 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 82 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) * (yyvsp[0].integer); }
-#line 1386 "rapussiBison.tab.c" /* yacc.c:1646  */
+#line 144 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.integer) = (yyvsp[-2].integer) - (yyvsp[0].integer); }
+#line 1465 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 83 "rapussiBison.y" /* yacc.c:1646  */
-    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) / (yyvsp[0].integer); }
-#line 1392 "rapussiBison.tab.c" /* yacc.c:1646  */
+#line 145 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.integer) = (yyvsp[-2].integer) * (yyvsp[0].integer); }
+#line 1471 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 84 "rapussiBison.y" /* yacc.c:1646  */
+#line 148 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[0].floatPonto); }
+#line 1477 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 26:
+#line 149 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) + (yyvsp[0].floatPonto); }
+#line 1483 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 27:
+#line 150 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) - (yyvsp[0].floatPonto); }
+#line 1489 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 28:
+#line 151 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) * (yyvsp[0].floatPonto); }
+#line 1495 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 29:
+#line 152 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) / (yyvsp[0].floatPonto); }
+#line 1501 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 30:
+#line 153 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[-2].integer) + (yyvsp[0].floatPonto); }
+#line 1507 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 31:
+#line 154 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[-2].integer) - (yyvsp[0].floatPonto); }
+#line 1513 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 32:
+#line 155 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[-2].integer) * (yyvsp[0].floatPonto); }
+#line 1519 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 33:
+#line 156 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[-2].integer) / (yyvsp[0].floatPonto); }
+#line 1525 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 34:
+#line 157 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) + (yyvsp[0].integer); }
+#line 1531 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 35:
+#line 158 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) - (yyvsp[0].integer); }
+#line 1537 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 36:
+#line 159 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) * (yyvsp[0].integer); }
+#line 1543 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 37:
+#line 160 "rapussiBison.y" /* yacc.c:1646  */
+    { (yyval.floatPonto) = (yyvsp[-2].floatPonto) / (yyvsp[0].integer); }
+#line 1549 "rapussiBison.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 38:
+#line 161 "rapussiBison.y" /* yacc.c:1646  */
     { (yyval.floatPonto) = (yyvsp[-2].integer) / (float)(yyvsp[0].integer); }
-#line 1398 "rapussiBison.tab.c" /* yacc.c:1646  */
+#line 1555 "rapussiBison.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1402 "rapussiBison.tab.c" /* yacc.c:1646  */
+#line 1559 "rapussiBison.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1626,7 +1783,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 87 "rapussiBison.y" /* yacc.c:1906  */
+#line 164 "rapussiBison.y" /* yacc.c:1906  */
 
 
 int main() {
